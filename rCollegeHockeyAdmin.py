@@ -16,14 +16,17 @@ def loadCmds():
     
 def addCmd(cmd,res):
   global cmdDict
+  cmd = cmd.strip()
+  res = res.strip()
   if cmd in cmdDict.keys():
       cmdDict[cmd].append(res)
   else:
-      cmdDict[cmd]=[res]
+      cmdDict[cmd]=[]
+      cmdDict[cmd].append(res)
   cmdDict[cmd] = list(set(cmdDict[cmd]))
   with open('./rCHCmds/rCollegeHockeyCmds.json', 'w') as file:
       file.write(json.dumps(cmdDict))
-  return f"{res} added to {cmd}"
+  return f"'{res}' added to '?{cmd}'"
   
 def rmCmd(cmd):
     global cmdDict
@@ -31,7 +34,7 @@ def rmCmd(cmd):
         cmdDict.pop(cmd)
     with open('./rCHCmds/rCollegeHockeyCmds.json', 'w') as file:
         file.write(json.dumps(cmdDict))
-    return f"{cmd} removed"
+    return f"?{cmd} removed"
 
 def findCmd(cmd):
     global cmdDict
@@ -220,8 +223,24 @@ cmdDict = loadCmds()
 
 def rCollegeHockeyAdmin(message):
   global cmdDict
+  ret=[]
+  
+  if(message.content.startswith('?addcmd ') and message.channel.name == 'bot-test'):
+    cmdList = message.content.split('?addcmd ')
+    if(len(cmdList)<2):
+      ret.append(message.channel.send("Please input two comma separated values"))
+    else:
+      cmdSplit=cmdList[1].split(',',maxsplit=1)
+      ret.append(message.channel.send(addCmd(cmdSplit[0],cmdSplit[1])))
+    return ret
+  if(message.content.startswith('?rmcmd ') and message.channel.name == 'bot-test'):
+    cmdList = message.content.split('?rmcmd ')
+    if(len(cmdList)==1):
+      ret.append(message.channel.send("Please input a cmd to remove"))
+    ret.append(message.channel.send(rmCmd(cmdList[1].strip())))
+    cmdDict=loadCmds()
+    return ret
   if(message.content.startswith('?roles')):
-        ret = []
         try:
             roleChoice = message.content.split('?roles ')
             if(len(roleChoice)==1):
