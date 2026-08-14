@@ -40,10 +40,10 @@ def findCmd(cmd):
     global cmdDict
     cmd=cmd.strip('?')
     if cmd in cmdDict.keys():
-        res=cmdDict[cmd][0]
-        if('[' in res):
-            return random.choice(ast.literal_eval(res))
-        return res
+        if(len(cmdDict[cmd])>1):
+          return random.choice(cmdDict[cmd])
+        else:
+          return cmdDict[cmd][0]
     return ''
 
 def decodeTeam(team):
@@ -96,9 +96,13 @@ def decodeTeam(team):
         "ferris" : "Ferris State",
         "ferriswheel" : "Ferris State",
         "finghawks" : "North Dakota",
+        "fp" : "Franklin Pierce",
         "goofers" : "Minnesota",
         "hc" : "Holy Cross",
         "hu" : "Harvard",
+        "homeless" : "Northeastern",
+        "thehomeless" : "Northeastern",
+        "homelesshuskies" : "Northeastern",
         "howlinhuskies" : "Northeastern",
         "huntsville" : "Alabama Huntsville",
         "icebus" : "UConn",
@@ -113,6 +117,7 @@ def decodeTeam(team):
         "liu" : "Long Island University",
         "mack" : "Merrimack",
         "mankato" : "Minnesota State",
+        "maryville" : "Maryville Saints",
         "mc" : "Merrimack",
         "mich" : "Michigan",
         "meatchicken" : "Michigan",
@@ -265,7 +270,7 @@ def rCollegeHockeyAdmin(message):
                     ret.append(message.author.send(roles2))
             else:
                 for i in message.guild.roles:
-                  if(roleChoice[1] == i.name and roleChoice[1] not in invalidRoles):
+                  if(roleChoice[1] == i.name.lower() and roleChoice[1] not in invalidRoles):
                     user=message.author
                     ret.append(user.add_roles(i))
                     ret.append(message.channel.send("{} added to {}".format(i.name, message.author.mention)))
@@ -301,7 +306,7 @@ def rCollegeHockeyAdmin(message):
                 ret.append(message.channel.send("Enter a Role to Remove"))
             else:
                 for i in message.guild.roles:
-                  if(roleChoice[1] == i.name and roleChoice[1] not in invalidRoles):
+                  if(roleChoice[1] == i.name.lower() and roleChoice[1] not in invalidRoles):
                     user=message.author
                     ret.append(user.remove_roles(i))
                     ret.append(message.channel.send("{} removed from {}".format(i.name, message.author.mention)))
@@ -469,6 +474,7 @@ def convertTeamtoDisRole(team):
                 "Lindenwood" : "Lindenwood Lions",
                 "Long Island University" : "LIU Sharks",
                 "Maine" : "Maine Black Bears",
+                "Maryville" : "Maryville Saints",
                 "Mercyhurst" : "Mercyhurst Lakers",
                 "Merrimack" : "Merrimack Warriors",
                 "Miami" : "Miami RedHawks",
@@ -567,6 +573,7 @@ def convertDisRoleToTeam(team):
                 "Lindenwood Lions" : "Lindenwood",
                 "LIU Sharks" : "Long Island University",
                 "Maine Black Bears" : "Maine",
+                "Maryville Saints" : "Maryville",
                 "Mercyhurst Lakers" : "Mercyhurst",
                 "Merrimack Warriors" : "Merrimack",
                 "Miami RedHawks" : "Miami",
@@ -716,6 +723,8 @@ def getCheer(role):
     "Craig" : ["https://media.discordapp.net/attachments/279688498485919744/1028033049260216370/Screenshot_20221007-155607_Twitter.jpg"],
     "Louisiana Ragin' Cajuns": ["Geaux Cajuns!"]}
     if role in cheerList:   
+            if(role=="Boston College Eagles"):
+                return random.choices(cheerList[role],weights=[60,5,90,10])[0]
             return random.choice(cheerList[role])
     else:
         return "";
@@ -746,7 +755,7 @@ def getJeer(role):
     "UMass Lowell River Hawks" : ["What's a River Hawk?","Low\nLower\nLowest\nLowell"],
     "UMass Minutemen" : ["Please Don't Riot!", "We Last Longer!","Think of those couches...they have family", "Embarrassment of the Commonwealth", "https://i.imgur.com/u1SCJ73.gifv"],
     "Boston University Terriers" : ["Sucks to BU!", "Screw BU!","*A* Boston University"],
-    "Northeastern Huskies" : ["Northleastern", "North! Eastern! Sucks!"],
+    "Northeastern Huskies" : ["Northleastern", "North! Eastern! Sucks!","https://media.discordapp.net/attachments/279689792990740481/1493991140863774780/Screenshot_20260415_110702_Discord.jpg?ex=69e0fb2c&is=69dfa9ac&hm=a6b74739c76c263c63f4262651cea44c3536b6d6c93d82d857cd641770208052&=&format=webp&width=2700&height=445","Homeless Huskies"],
     "Colgate Raiders" : ["Crest is Best!"],
     "Cornell Big Red" : ["Harvard Rejects!", "```\nUp above Cayuga's waters, there's an awful smell;\nThirty thousand Harvard rejects call themselves Cornell.\nFlush the toilet, flush the toilet,\nFlush them all to hell!\nThirty thousand Harvard rejects call themselves Cornell!```"],
     "Maine Black Bears" : ["M-A-I-N-E ~~Go Blue~~ MAAAAAIIINNNE SUCKS", "UMOwO"],
